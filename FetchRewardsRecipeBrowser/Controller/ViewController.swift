@@ -18,7 +18,17 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
-        networkManager.fetchRequest(networkManager.configURL(.byCategory), completion: <#T##(Result<[Category], Error>) -> ()#>)
+        networkManager.fetchRequest(networkManager.configURL(.byCategory)) { [self] result in
+            switch result {
+            case .success(let categories):
+                self.categories = categories
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            case .failure(let error):
+                debugPrint(error.localizedDescription)
+            }
+        }
     }
     
 
@@ -36,20 +46,13 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-       return 50
+       return 100
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.row % 2 == 0 {
-            if let cell = tableView.dequeueReusableCell(withIdentifier: "rightSideCell", for: indexPath) as? RightSideCell {
-                cell.configCell(with: categories[indexPath.row])
-                return cell
-            }
-        } else {
-            if let cell = tableView.dequeueReusableCell(withIdentifier: "leftSideCell", for: indexPath) as? LeftSideCell {
-                cell.configCell(with: categories[indexPath.row])
-                return cell
-            }
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "leftSideCell", for: indexPath) as? LeftSideCell {
+            cell.configCell(with: categories[indexPath.row])
+            return cell
         }
         return UITableViewCell()
     }
