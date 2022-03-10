@@ -31,7 +31,7 @@ struct NetworkManager {
         return nil
     }
     
-    func fetchRequest(_ url: URL?, completion: @escaping (Result<[Category], Error>) -> ()) {
+    func fetchCategories(_ url: URL?, completion: @escaping (Result<[Category], Error>) -> ()) {
         guard let safeURL = url else { return }
         var categories: [Category] = []
         
@@ -59,4 +59,34 @@ struct NetworkManager {
         }
         task.resume()
     }
+    func fetchMeals(_ url: URL?, completion: @escaping (Result<[Meal], Error>) -> ()) {
+        guard let safeURL = url else { return }
+        var meals: [Meal] = []
+        
+        let request = URLRequest(url: safeURL)
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard error == nil else {
+                debugPrint(error.debugDescription)
+                return
+            }
+            
+            let decoder = JSONDecoder()
+            
+            if let safeData = data {
+                do {
+                    let decodedData = try decoder.decode(Meals.self, from: safeData)
+                    meals = decodedData.meals
+                    completion(.success(meals))
+                    meals.removeAll()
+                } catch {
+                    completion(.failure(error))
+                    debugPrint(error.localizedDescription)
+                }
+            }
+        }
+        task.resume()
+    }
+    
+    
 }

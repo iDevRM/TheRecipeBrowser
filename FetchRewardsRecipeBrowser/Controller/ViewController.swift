@@ -13,12 +13,13 @@ class ViewController: UIViewController {
     
     let networkManager = NetworkManager()
     var categories: [Category] = []
+    var selectedCategory: String = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
-        networkManager.fetchRequest(networkManager.configURL(.byCategory)) { [self] result in
+        networkManager.fetchCategories(networkManager.configURL(.byCategory)) { [self] result in
             switch result {
             case .success(let categories):
                 self.categories = categories
@@ -28,6 +29,12 @@ class ViewController: UIViewController {
             case .failure(let error):
                 debugPrint(error.localizedDescription)
             }
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let destVC = segue.destination as? MealsViewController {
+            destVC.category = selectedCategory
         }
     }
     
@@ -55,6 +62,11 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             return cell
         }
         return UITableViewCell()
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        selectedCategory = categories[indexPath.row].name
+        performSegue(withIdentifier: "mealsByCategory", sender: nil)
     }
 }
 

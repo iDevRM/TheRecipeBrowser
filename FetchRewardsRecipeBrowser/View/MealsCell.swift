@@ -1,24 +1,26 @@
 //
-//  LeftSideCell.swift
+//  MealsCell.swift
 //  FetchRewardsRecipeBrowser
 //
-//  Created by Rick Martinez on 3/8/22.
+//  Created by Rick Martinez on 3/9/22.
 //
 
 import UIKit
 
-class LeftSideCell: UITableViewCell {
+class MealsCell: UITableViewCell {
 
+    @IBOutlet weak var cellBackgroundView: UIView!
     @IBOutlet weak var thumbnail: UIImageView!
-    @IBOutlet weak var categoryLabel: UILabel!
-    @IBOutlet weak var descriptionLabel: UILabel!
+    @IBOutlet weak var mealLabel: UILabel!
     
-    func configCell(with category: Category) {
-        categoryLabel.text = category.name
-        descriptionLabel.text = category.description
-        if let image = fetchImage(with: category.thumbnail) {
+    func configCell(_ meal: Meal) {
+        mealLabel.text = meal.name
+        if let image = fetchImage(with: meal.image) {
             thumbnail.image = image
         }
+        mealLabel.font = UIFont.systemFont(ofSize: 25)
+        mealLabel.textColor = .white
+        thumbnail.layer.cornerRadius = 10
     }
     
     private func fetchImage(with string: String) -> UIImage? {
@@ -31,5 +33,6 @@ class LeftSideCell: UITableViewCell {
         }
         return nil
     }
+    
 
 }
