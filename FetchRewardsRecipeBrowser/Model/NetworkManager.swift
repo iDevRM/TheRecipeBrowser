@@ -9,6 +9,11 @@ import Foundation
 
 struct NetworkManager {
     
+    // put these into user defaults
+    var categories = [Category]()
+    var meals = [Meal]()
+    var details = [Recipe]()
+    
     private let BASE_URL = "https://www.themealdb.com/api/json/v1/"
     private let API_KEY = "1"
     
@@ -79,6 +84,35 @@ struct NetworkManager {
                     meals = decodedData.meals
                     completion(.success(meals))
                     meals.removeAll()
+                } catch {
+                    completion(.failure(error))
+                    debugPrint(error.localizedDescription)
+                }
+            }
+        }
+        task.resume()
+    }
+    
+    func fetchDetails(_ url: URL?, completion: @escaping (Result<Recipe, Error>) -> ()) {
+        guard let safeURL = url else { return }
+        var recipe = Recipe(meals: [[:]])
+        
+        let request = URLRequest(url: safeURL)
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard error == nil else {
+                debugPrint(error.debugDescription)
+                return
+            }
+            
+            let decoder = JSONDecoder()
+            
+            if let safeData = data {
+                do {
+                    let decodedData = try decoder.decode(Recipe.self, from: safeData)
+                    print(decodedData.meals)
+                    recipe = decodedData
+                    completion(.success(recipe))
                 } catch {
                     completion(.failure(error))
                     debugPrint(error.localizedDescription)

@@ -15,6 +15,7 @@ class MealsViewController: UIViewController {
     var meals: [Meal] = []
     var category: String = ""
     var networkManager = NetworkManager()
+    var selectedId = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,5 +53,15 @@ extension MealsViewController: UITableViewDelegate, UITableViewDataSource {
         return UITableViewCell()
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        selectedId = meals[indexPath.row].id
+        performSegue(withIdentifier: "detailSegue", sender: nil)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let destVC = segue.destination as? DetailViewController {
+            destVC.selectedId = selectedId
+        }
+    }
     
 }
