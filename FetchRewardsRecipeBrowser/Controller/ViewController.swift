@@ -19,7 +19,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
-        networkManager.fetchCategories(networkManager.configURL(.byCategory)) { [self] result in
+        networkManager.fetchCategories() { result in
             switch result {
             case .success(let categories):
                 self.categories = categories
@@ -67,6 +67,10 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedCategory = categories[indexPath.row].name
         performSegue(withIdentifier: "mealsByCategory", sender: nil)
+    }
+    
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        return selectedCategory == "" ? false : true
     }
 }
 

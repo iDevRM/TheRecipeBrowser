@@ -170,7 +170,7 @@
                                             <outlet property="imageView" destination="nPr-V7-BQS" id="Kh0-eQ-Ty1"/>
                                             <outlet property="mealLabel" destination="evu-h8-cD8" id="pcP-kb-7MY"/>
                                             <outlet property="thumbnail" destination="nPr-V7-BQS" id="9QJ-EY-hUv"/>
-                                            <segue destination="Utg-QZ-TGS" kind="presentation" identifier="detailSegue" modalTransitionStyle="flipHorizontal" id="vcy-Kv-UQB"/>
+                                            <segue destination="Utg-QZ-TGS" kind="presentation" identifier="detailSegue" id="qSB-Cv-lJA"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>

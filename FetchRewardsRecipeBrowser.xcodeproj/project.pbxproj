@@ -21,7 +21,7 @@
 		1D4C060627DAE2D0008B3AB5 /* IngredientCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D4C060527DAE2D0008B3AB5 /* IngredientCell.swift */; };
 		1DC16A2827D85F3800034D5B /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DC16A2727D85F3800034D5B /* NetworkManager.swift */; };
 		1DC16A2A27D9982300034D5B /* MealsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DC16A2927D9982300034D5B /* MealsViewController.swift */; };
-		1DD6577B27DAD43D00365146 /* Recipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DD6577A27DAD43D00365146 /* Recipe.swift */; };
+		1DD6577B27DAD43D00365146 /* Details.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DD6577A27DAD43D00365146 /* Details.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,7 +41,7 @@
 		1D4C060527DAE2D0008B3AB5 /* IngredientCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientCell.swift; sourceTree = "<group>"; };
 		1DC16A2727D85F3800034D5B /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		1DC16A2927D9982300034D5B /* MealsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealsViewController.swift; sourceTree = "<group>"; };
-		1DD6577A27DAD43D00365146 /* Recipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recipe.swift; sourceTree = "<group>"; };
+		1DD6577A27DAD43D00365146 /* Details.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Details.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,7 +113,7 @@
 				1D43858227D8568B00FA29EB /* Category.swift */,
 				1DC16A2727D85F3800034D5B /* NetworkManager.swift */,
 				1D03BEF927D9A0ED002BBFDB /* Meal.swift */,
-				1DD6577A27DAD43D00365146 /* Recipe.swift */,
+				1DD6577A27DAD43D00365146 /* Details.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -196,7 +196,7 @@
 				1D43856827D845DC00FA29EB /* AppDelegate.swift in Sources */,
 				1D03BEFA27D9A0ED002BBFDB /* Meal.swift in Sources */,
 				1D03BEF827D9A01A002BBFDB /* MealsCell.swift in Sources */,
-				1DD6577B27DAD43D00365146 /* Recipe.swift in Sources */,
+				1DD6577B27DAD43D00365146 /* Details.swift in Sources */,
 				1D4C060627DAE2D0008B3AB5 /* IngredientCell.swift in Sources */,
 				1DC16A2A27D9982300034D5B /* MealsViewController.swift in Sources */,
 				1D43856A27D845DC00FA29EB /* SceneDelegate.swift in Sources */,

@@ -14,18 +14,15 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var instructionLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     
-    var recipe = Recipe(meals: [[:]])
-    var selectedId: String = ""
+    var recipe: Recipe?
+    var mealId = ""
     var networkManager = NetworkManager()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
-        nameLabel.text = recipe.meals.first?["strMeal"] ?? "Value not found"
-//        thumbnail.image = fetchImage(with: (recipe.details.first?["strMealThumb"])!!)
-        instructionLabel.text = recipe.meals.first?["strInstructions"] ?? "Value not found"
-        networkManager.fetchDetails(networkManager.configURL(.byID, with: selectedId)) { result in
+        networkManager.fetchDetails(networkManager.configUrlString(.byID, with: mealId)) { result in
             switch result {
             case .failure(let error):
                 debugPrint(error.localizedDescription)
@@ -36,6 +33,8 @@ class DetailViewController: UIViewController {
                 }
             }
         }
+        print("recipe instructions are \(recipe?.instructions)")
+        instructionLabel.text = recipe?.instructions
 
     }
     
@@ -55,10 +54,8 @@ class DetailViewController: UIViewController {
 extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let count = recipe.meals.first?.count {
-            return count
-        }
-        return Int()
+       
+        return 5
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -81,6 +78,4 @@ extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
         }
         return UITableViewCell()
     }
-    
-    
 }

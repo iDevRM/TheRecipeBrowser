@@ -12,7 +12,8 @@ struct NetworkManager {
     // put these into user defaults
     var categories = [Category]()
     var meals = [Meal]()
-    var details = [Recipe]()
+    var details = [Details]()
+    var recipe: Recipe?
     
     private let BASE_URL = "https://www.themealdb.com/api/json/v1/"
     private let API_KEY = "1"
@@ -23,24 +24,15 @@ struct NetworkManager {
         case byID = "/lookup.php?i="
     }
     
-    func configURL(_ endpoint: Endpoint, with string: String? = nil) -> URL? {
-        if string != nil {
-            if let url = URL(string: "\(BASE_URL)\(API_KEY)\(endpoint.rawValue)\(string!)") {
-                return url
-            }
-        } else {
-            if let url = URL(string: "\(BASE_URL)\(API_KEY)\(endpoint.rawValue)") {
-                return url
-            }
-        }
-        return nil
+    func configUrlString(_ endpoint: Endpoint, with string: String? = nil) -> String {
+        let url = "\(BASE_URL)\(API_KEY)\(endpoint.rawValue)"
+        return string == nil ? url : "\(url)\(string!)"
     }
     
-    func fetchCategories(_ url: URL?, completion: @escaping (Result<[Category], Error>) -> ()) {
-        guard let safeURL = url else { return }
-        var categories: [Category] = []
+    func fetchCategories(completion: @escaping (Result<[Category], Error>) -> ()) {
+        guard let url = URL(string: configUrlString(.byCategory)) else { return }
         
-        let request = URLRequest(url: safeURL)
+        let request = URLRequest(url: url)
         
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             guard error == nil else {
@@ -51,6 +43,7 @@ struct NetworkManager {
             let decoder = JSONDecoder()
             
             if let safeData = data {
+                var categories: [Category] = []
                 do {
                     let decodedData = try decoder.decode(Categories.self, from: safeData)
                     categories = decodedData.categories
@@ -64,11 +57,11 @@ struct NetworkManager {
         }
         task.resume()
     }
-    func fetchMeals(_ url: URL?, completion: @escaping (Result<[Meal], Error>) -> ()) {
-        guard let safeURL = url else { return }
-        var meals: [Meal] = []
+    
+    func fetchMeals(_ string: String, completion: @escaping (Result<[Meal], Error>) -> ()) {
+        guard let url = URL(string: string) else { return }
         
-        let request = URLRequest(url: safeURL)
+        let request = URLRequest(url: url)
         
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             guard error == nil else {
@@ -79,6 +72,7 @@ struct NetworkManager {
             let decoder = JSONDecoder()
             
             if let safeData = data {
+                var meals: [Meal] = []
                 do {
                     let decodedData = try decoder.decode(Meals.self, from: safeData)
                     meals = decodedData.meals
@@ -93,33 +87,47 @@ struct NetworkManager {
         task.resume()
     }
     
-    func fetchDetails(_ url: URL?, completion: @escaping (Result<Recipe, Error>) -> ()) {
-        guard let safeURL = url else { return }
-        var recipe = Recipe(meals: [[:]])
+    mutating func fetchDetails(_ string: String, completion: @escaping (Result<Recipe, Error>) -> ()) {
+        guard let url = URL(string: string) else { return }
         
-        let request = URLRequest(url: safeURL)
+        let request = URLRequest(url: url)
         
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+        let task = URLSession.shared.dataTask(with: request) { [self] data, response, error in
             guard error == nil else {
                 debugPrint(error.debugDescription)
                 return
             }
-            
             let decoder = JSONDecoder()
             
             if let safeData = data {
                 do {
-                    let decodedData = try decoder.decode(Recipe.self, from: safeData)
-                    print(decodedData.meals)
-                    recipe = decodedData
+                    let decodedData = try decoder.decode(Details.self, from: safeData)
+                    let recipe = createRecipe(with: decodedData)
                     completion(.success(recipe))
                 } catch {
                     completion(.failure(error))
-                    debugPrint(error.localizedDescription)
+                    
                 }
             }
         }
         task.resume()
+    }
+    
+    func createRecipe(with details: Details) -> Recipe {
+        let removedNils = details.details[0].filter {$0.value != nil || $0.value != ""}
+        let ingredients = removedNils.keys.filter {$0.contains("ingredient")}
+        let measurements = removedNils.keys.filter { $0.contains("measure")}
+        
+        if let thumb = details.details[0]["strMealThumb"]!,
+           let instructions = details.details[0]["strInstructions"]! {
+            let recipe = Recipe(thumbnail: thumb , instructions: instructions, ingredients: ingredients.sorted(by: {$0 < $1}), measurements: measurements.sorted(by: {$0 < $1}))
+            return recipe
+        } else {
+            return Recipe(thumbnail: "", instructions: "", ingredients: [], measurements: [])
+        }
+        
+//        let ingredients = values.filter {$0.key.contains("ingredient")}
+//        let measurements = values.filter {$0.key.contains("measure")}
     }
     
     
