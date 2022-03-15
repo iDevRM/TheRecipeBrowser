@@ -19,6 +19,7 @@ class LeftSideCell: UITableViewCell {
         if let image = fetchImage(with: category.thumbnail) {
             thumbnail.image = image
         }
+        thumbnail.layer.cornerRadius = 10
     }
     
     private func fetchImage(with string: String) -> UIImage? {

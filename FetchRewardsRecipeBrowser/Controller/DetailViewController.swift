@@ -37,8 +37,6 @@ class DetailViewController: UIViewController {
                 }
             }
         }
-       
-
     }
     
     private func fetchImage(with string: String) -> UIImage? {
@@ -57,7 +55,6 @@ class DetailViewController: UIViewController {
 extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-       
         return recipe.ingredients.count
     }
     
@@ -75,7 +72,6 @@ extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: "ingredientCell", for: indexPath) as? IngredientCell {
-            
             cell.configCell(ingredient:recipe.ingredients[indexPath.row].name, measurement: recipe.measurements[indexPath.row].amount)
             return cell
         }

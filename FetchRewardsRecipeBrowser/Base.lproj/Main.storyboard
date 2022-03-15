@@ -210,13 +210,13 @@
                                 <rect key="frame" x="20" y="104" width="374" height="100"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BLt-47-tmu">
-                                        <rect key="frame" x="0.0" y="0.0" width="254" height="100"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="301" height="100"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="4YB-0I-cBv">
-                                        <rect key="frame" x="274" y="0.0" width="100" height="100"/>
+                                        <rect key="frame" x="321" y="23.5" width="53" height="53"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="4YB-0I-cBv" secondAttribute="height" multiplier="1:1" id="U8L-VR-nta"/>
                                         </constraints>
@@ -286,20 +286,6 @@
                                 </prototypes>
                                 <sections/>
                             </tableView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3F6-rw-5Pd">
-                                <rect key="frame" x="20" y="44" width="38" height="27"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="1"/>
-                                <color key="tintColor" systemColor="labelColor"/>
-                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" title="Button">
-                                    <imageReference key="image" image="arrow.left" catalog="system" symbolScale="large"/>
-                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="23" scale="large"/>
-                                </state>
-                                <connections>
-                                    <segue destination="nHA-X6-xAj" kind="presentation" animates="NO" modalPresentationStyle="fullScreen" id="Q3T-22-B7E"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="gtb-Cx-20h"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -334,9 +320,6 @@
             <point key="canvasLocation" x="1724.6376811594205" y="116.51785714285714"/>
         </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="Q3T-22-B7E"/>
-    </inferredMetricsTieBreakers>
     <resources>
         <image name="arrow.left" catalog="system" width="128" height="98"/>
         <systemColor name="labelColor">
