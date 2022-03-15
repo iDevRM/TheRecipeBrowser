@@ -14,7 +14,7 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var instructionLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     
-    var recipe: Recipe?
+    var recipe = Recipe(name: "", thumbnail: "", instructions: "", ingredients: [], measurements: [])
     var mealId = ""
     var networkManager = NetworkManager()
 
@@ -29,12 +29,15 @@ class DetailViewController: UIViewController {
             case .success(let recipe):
                 self.recipe = recipe
                 DispatchQueue.main.async {
+                    self.thumbnail.image = self.fetchImage(with: recipe.thumbnail)
+                    self.thumbnail.layer.cornerRadius = 10
+                    self.nameLabel.text = recipe.name
+                    self.instructionLabel.text = recipe.instructions
                     self.tableView.reloadData()
                 }
             }
         }
-        print("recipe instructions are \(recipe?.instructions)")
-        instructionLabel.text = recipe?.instructions
+       
 
     }
     
@@ -55,7 +58,7 @@ extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
        
-        return 5
+        return recipe.ingredients.count
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -73,7 +76,7 @@ extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: "ingredientCell", for: indexPath) as? IngredientCell {
             
-            cell.configCell(ingredient: "cake", measurement: "2 Cups")
+            cell.configCell(ingredient:recipe.ingredients[indexPath.row].name, measurement: recipe.measurements[indexPath.row].amount)
             return cell
         }
         return UITableViewCell()

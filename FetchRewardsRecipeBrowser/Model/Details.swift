@@ -8,16 +8,24 @@
 import Foundation
 
 struct Details: Codable {
-    var details: [[String: String?]]
-    
-    private enum CodingKeys: String, CodingKey {
-        case details = "meals"
-    }
+    var meals: [[String: String?]]
 }
 
 struct Recipe {
+    let name: String
     let thumbnail: String
     let instructions: String
-    let ingredients: [String]
-    let measurements: [String]
+    let ingredients: [Ingredient]
+    let measurements: [Measurement]
 }
+
+struct Ingredient {
+    let key: String
+    let name: String
+}
+
+struct Measurement {
+    let key: String
+    let amount: String
+}
+

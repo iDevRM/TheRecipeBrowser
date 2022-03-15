@@ -114,21 +114,32 @@ struct NetworkManager {
     }
     
     func createRecipe(with details: Details) -> Recipe {
-        let removedNils = details.details[0].filter {$0.value != nil || $0.value != ""}
-        let ingredients = removedNils.keys.filter {$0.contains("ingredient")}
-        let measurements = removedNils.keys.filter { $0.contains("measure")}
-        
-        if let thumb = details.details[0]["strMealThumb"]!,
-           let instructions = details.details[0]["strInstructions"]! {
-            let recipe = Recipe(thumbnail: thumb , instructions: instructions, ingredients: ingredients.sorted(by: {$0 < $1}), measurements: measurements.sorted(by: {$0 < $1}))
+        var ingArray = [Ingredient]()
+        var measArray = [Measurement]()
+       
+        let removedNils = details.meals[0].filter {$0.value != nil}
+        let removedEmpties = removedNils.filter  { $0.value! != ""}
+        print(removedEmpties)
+        for (key, value) in removedEmpties {
+            if let safeValue = value {
+                if key.contains("Ingredient") {
+                    ingArray.append(Ingredient(key: key, name: safeValue))
+                } else if key.contains("Measure") {
+                    measArray.append(Measurement(key: key, amount: safeValue))
+                }
+            }
+        }
+       
+        let sortedIngredients = ingArray.sorted {$0.key < $1.key}
+        let sortedMeasurements = measArray.sorted {$0.key < $1.key}
+
+        if let thumb = details.meals[0]["strMealThumb"]!,
+           let instructions = details.meals[0]["strInstructions"]!,
+           let name = details.meals[0]["strMeal"]! {
+            let recipe = Recipe(name: name, thumbnail: thumb, instructions: instructions, ingredients: sortedIngredients, measurements: sortedMeasurements)
             return recipe
         } else {
-            return Recipe(thumbnail: "", instructions: "", ingredients: [], measurements: [])
+            return Recipe(name: "", thumbnail: "", instructions: "", ingredients: [], measurements: [])
         }
-        
-//        let ingredients = values.filter {$0.key.contains("ingredient")}
-//        let measurements = values.filter {$0.key.contains("measure")}
     }
-    
-    
 }
