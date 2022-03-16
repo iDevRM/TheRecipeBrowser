@@ -14,42 +14,41 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var instructionLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     
-    var recipe = Recipe(name: "", thumbnail: "", instructions: "", ingredients: [], measurements: [])
+    var recipe = Recipe(name: "", thumbnail: "", instructions: "", ingredients: [])
     var mealId = ""
     var networkManager = NetworkManager()
-
+    let child = LoadingViewController()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        createSpinnerView()
         tableView.delegate = self
         tableView.dataSource = self
+        print("meal id being used in detail view is \(mealId)")
         networkManager.fetchDetails(networkManager.configUrlString(.byID, with: mealId)) { result in
             switch result {
             case .failure(let error):
                 debugPrint(error.localizedDescription)
             case .success(let recipe):
-                self.recipe = recipe
                 DispatchQueue.main.async {
-                    self.thumbnail.image = self.fetchImage(with: recipe.thumbnail)
-                    self.thumbnail.layer.cornerRadius = 10
-                    self.nameLabel.text = recipe.name
-                    self.instructionLabel.text = recipe.instructions
-                    self.tableView.reloadData()
+                    self.recipe = recipe
+                    self.removeSpinnerView()
                 }
             }
         }
     }
     
-    private func fetchImage(with string: String) -> UIImage? {
-        guard let url = URL(string: string) else { return nil }
-        
-        if let data = try? Data(contentsOf: url) {
-            if let image = UIImage(data: data) {
-                return image
-            }
+    private func setValues() {
+        if let image = recipe.thumbnail.convertToImage() {
+            self.thumbnail.image = image
         }
-        return nil
+        thumbnail.layer.cornerRadius = 10
+        nameLabel.text = recipe.name
+        nameLabel.adjustsFontSizeToFitWidth = true
+        instructionLabel.text = recipe.instructions
+        tableView.reloadData()
     }
-
+    
 }
 
 extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
@@ -72,9 +71,27 @@ extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: "ingredientCell", for: indexPath) as? IngredientCell {
-            cell.configCell(ingredient:recipe.ingredients[indexPath.row].name, measurement: recipe.measurements[indexPath.row].amount)
+            cell.configCell(with: recipe.ingredients[indexPath.row])
             return cell
         }
         return UITableViewCell()
+    }
+}
+
+extension DetailViewController {
+    func createSpinnerView() {
+        addChild(child)
+        child.view.frame = view.frame
+        view.addSubview(child.view)
+        child.didMove(toParent: self)
+    }
+    
+    func removeSpinnerView() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
+            self.child.willMove(toParent: nil)
+            self.child.view.removeFromSuperview()
+            self.child.removeFromParent()
+            self.setValues()
+        }
     }
 }

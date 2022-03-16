@@ -12,15 +12,9 @@ class IngredientCell: UITableViewCell {
     @IBOutlet weak var ingredientLabel: UILabel!
     @IBOutlet weak var measurementLabel: UILabel!
     
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
+    func configCell(with ingredient: TrueIngredient) {
+        ingredientLabel.text = ingredient.name
+        measurementLabel.text = ingredient.amount
     }
     
-    func configCell(ingredient: String, measurement: String) {
-        ingredientLabel.text = ingredient
-        measurementLabel.text = measurement
-    }
-
 }

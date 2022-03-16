@@ -9,12 +9,6 @@ import Foundation
 
 struct NetworkManager {
     
-    // put these into user defaults
-    var categories = [Category]()
-    var meals = [Meal]()
-    var details = [Details]()
-    var recipe: Recipe?
-    
     private let BASE_URL = "https://www.themealdb.com/api/json/v1/"
     private let API_KEY = "1"
     
@@ -106,40 +100,56 @@ struct NetworkManager {
                     completion(.success(recipe))
                 } catch {
                     completion(.failure(error))
-                    
+                    debugPrint(error.localizedDescription)
                 }
             }
         }
         task.resume()
     }
     
-    func createRecipe(with details: Details) -> Recipe {
-        var ingArray = [Ingredient]()
-        var measArray = [Measurement]()
-       
-        let removedNils = details.meals[0].filter {$0.value != nil}
-        let removedEmpties = removedNils.filter  { $0.value! != ""}
-        print(removedEmpties)
-        for (key, value) in removedEmpties {
-            if let safeValue = value {
-                if key.contains("Ingredient") {
-                    ingArray.append(Ingredient(key: key, name: safeValue))
-                } else if key.contains("Measure") {
-                    measArray.append(Measurement(key: key, amount: safeValue))
-                }
-            }
-        }
-       
-        let sortedIngredients = ingArray.sorted {$0.key < $1.key}
-        let sortedMeasurements = measArray.sorted {$0.key < $1.key}
-
+    private func createRecipe(with details: Details) -> Recipe {
+        let cleanDictionary = removeInvalidValues(from: details)
+        
+        let trueIngredients = createTrueIngredient(with: cleanDictionary)
+        
         if let thumb = details.meals[0]["strMealThumb"]!,
            let instructions = details.meals[0]["strInstructions"]!,
            let name = details.meals[0]["strMeal"]! {
-            let recipe = Recipe(name: name, thumbnail: thumb, instructions: instructions, ingredients: sortedIngredients, measurements: sortedMeasurements)
+            let recipe = Recipe(name: name, thumbnail: thumb, instructions: instructions, ingredients: trueIngredients)
             return recipe
         } else {
-            return Recipe(name: "", thumbnail: "", instructions: "", ingredients: [], measurements: [])
+            return Recipe(name: "", thumbnail: "", instructions: "", ingredients: [])
         }
+    }
+    
+    private func removeInvalidValues(from details: Details) -> [String : String?] {
+        let removedNils = details.meals[0].filter {$0.value != nil}
+        let removedEmpties = removedNils.filter  { $0.value! != "" }
+        let removedSpaces = removedEmpties.filter { $0.value! != " " }
+        return removedSpaces
+    }
+    
+    private func createTrueIngredient(with dictionary: [String: String?]) -> [TrueIngredient] {
+        var ingredientArray = [Ingredient]()
+        var measurementArray = [Measurement]()
+        var trueIngredientArray = [TrueIngredient]()
+        
+        for (key, value) in dictionary {
+            if let safeValue = value {
+                if key.contains("Ingredient") {
+                    ingredientArray.append(Ingredient(key: key, name: safeValue))
+                } else if key.contains("Measure") {
+                    measurementArray.append(Measurement(key: key, amount: safeValue))
+                }
+            }
+        }
+        
+        let sortedIngredients = ingredientArray.sorted {$0.key < $1.key}
+        let sortedMeasurements = measurementArray.sorted {$0.key < $1.key}
+        
+        for (ingredient, measurement) in zip(sortedIngredients,sortedMeasurements) {
+            trueIngredientArray.append(TrueIngredient(name: ingredient.name, amount: measurement.amount))
+        }
+        return trueIngredientArray
     }
 }

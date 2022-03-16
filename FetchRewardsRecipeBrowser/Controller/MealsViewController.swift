@@ -8,10 +8,10 @@
 import UIKit
 
 class MealsViewController: UIViewController {
-
+    
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
-
+    
     var meals: [Meal] = []
     var category = ""
     var networkManager = NetworkManager()
@@ -19,7 +19,6 @@ class MealsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("selected category is \(category)")
         tableView.delegate = self
         tableView.dataSource = self
         networkManager.fetchMeals(networkManager.configUrlString(.byMealsInCategory, with: category)) { result in
@@ -34,8 +33,6 @@ class MealsViewController: UIViewController {
             }
         }
     }
-    
-
 }
 
 extension MealsViewController: UITableViewDelegate, UITableViewDataSource {
@@ -57,6 +54,7 @@ extension MealsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.selectedId = self.meals[indexPath.row].id
+        print("Selected ID in mealsVC is \(selectedId)")
         self.performSegue(withIdentifier: "detailSegue", sender: nil)
     }
     
@@ -69,5 +67,4 @@ extension MealsViewController: UITableViewDelegate, UITableViewDataSource {
             destVC.mealId = selectedId
         }
     }
-    
 }

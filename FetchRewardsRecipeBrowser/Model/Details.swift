@@ -15,8 +15,7 @@ struct Recipe {
     let name: String
     let thumbnail: String
     let instructions: String
-    let ingredients: [Ingredient]
-    let measurements: [Measurement]
+    let ingredients: [TrueIngredient]
 }
 
 struct Ingredient {
@@ -26,6 +25,11 @@ struct Ingredient {
 
 struct Measurement {
     let key: String
+    let amount: String
+}
+
+struct TrueIngredient {
+    let name: String
     let amount: String
 }
 

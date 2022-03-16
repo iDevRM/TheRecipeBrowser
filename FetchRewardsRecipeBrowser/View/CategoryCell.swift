@@ -7,8 +7,8 @@
 
 import UIKit
 
-class LeftSideCell: UITableViewCell {
-
+class CategoryCell: UITableViewCell {
+    
     @IBOutlet weak var thumbnail: UIImageView!
     @IBOutlet weak var categoryLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
@@ -16,21 +16,9 @@ class LeftSideCell: UITableViewCell {
     func configCell(with category: Category) {
         categoryLabel.text = category.name
         descriptionLabel.text = category.description
-        if let image = fetchImage(with: category.thumbnail) {
+        if let image = category.thumbnail.convertToImage() {
             thumbnail.image = image
         }
         thumbnail.layer.cornerRadius = 10
     }
-    
-    private func fetchImage(with string: String) -> UIImage? {
-        guard let url = URL(string: string) else { return nil }
-        
-        if let data = try? Data(contentsOf: url) {
-            if let image = UIImage(data: data) {
-                return image
-            }
-        }
-        return nil
-    }
-
 }
