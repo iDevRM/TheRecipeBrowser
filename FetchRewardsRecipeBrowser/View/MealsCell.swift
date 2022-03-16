@@ -18,7 +18,8 @@ class MealsCell: UITableViewCell {
         if let image = meal.image.convertToImage() {
             thumbnail.image = image
         }
-        mealLabel.font = UIFont.systemFont(ofSize: 25)
+        mealLabel.font = UIFont.boldSystemFont(ofSize: 22)
+        mealLabel.adjustsFontSizeToFitWidth = true
         mealLabel.textColor = .white
         thumbnail.layer.cornerRadius = 10
     }

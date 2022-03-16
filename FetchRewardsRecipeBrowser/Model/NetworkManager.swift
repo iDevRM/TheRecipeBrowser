@@ -124,7 +124,7 @@ struct NetworkManager {
     
     private func removeInvalidValues(from details: Details) -> [String : String?] {
         let removedNils = details.meals[0].filter {$0.value != nil}
-        let removedEmpties = removedNils.filter  { $0.value! != "" }
+        let removedEmpties = removedNils.filter { $0.value! != "" }
         let removedSpaces = removedEmpties.filter { $0.value! != " " }
         return removedSpaces
     }

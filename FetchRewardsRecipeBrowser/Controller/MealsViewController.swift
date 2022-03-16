@@ -33,6 +33,10 @@ class MealsViewController: UIViewController {
             }
         }
     }
+    
+    @IBAction func backBtnTapped(_ sender: UIButton) {
+        performSegue(withIdentifier: "backSegue", sender: nil)
+    }
 }
 
 extension MealsViewController: UITableViewDelegate, UITableViewDataSource {
@@ -54,7 +58,6 @@ extension MealsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.selectedId = self.meals[indexPath.row].id
-        print("Selected ID in mealsVC is \(selectedId)")
         self.performSegue(withIdentifier: "detailSegue", sender: nil)
     }
     

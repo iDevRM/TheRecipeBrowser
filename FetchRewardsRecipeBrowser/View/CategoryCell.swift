@@ -19,6 +19,7 @@ class CategoryCell: UITableViewCell {
         if let image = category.thumbnail.convertToImage() {
             thumbnail.image = image
         }
+        categoryLabel.font = UIFont.boldSystemFont(ofSize: 16)
         thumbnail.layer.cornerRadius = 10
     }
 }

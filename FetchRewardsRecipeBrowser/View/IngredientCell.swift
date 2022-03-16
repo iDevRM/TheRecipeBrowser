@@ -16,5 +16,4 @@ class IngredientCell: UITableViewCell {
         ingredientLabel.text = ingredient.name
         measurementLabel.text = ingredient.amount
     }
-    
 }

@@ -11,7 +11,7 @@ class DetailViewController: UIViewController {
     
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var thumbnail: UIImageView!
-    @IBOutlet weak var instructionLabel: UILabel!
+    @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var tableView: UITableView!
     
     var recipe = Recipe(name: "", thumbnail: "", instructions: "", ingredients: [])
@@ -21,21 +21,25 @@ class DetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        createSpinnerView()
+        createSpinnerView(child)
+        textView.endEditing(true)
         tableView.delegate = self
         tableView.dataSource = self
-        print("meal id being used in detail view is \(mealId)")
         networkManager.fetchDetails(networkManager.configUrlString(.byID, with: mealId)) { result in
             switch result {
             case .failure(let error):
                 debugPrint(error.localizedDescription)
             case .success(let recipe):
+                self.recipe = recipe
                 DispatchQueue.main.async {
-                    self.recipe = recipe
-                    self.removeSpinnerView()
+                    self.removeSpinnerView(self.child)
                 }
             }
         }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        mealId = ""
     }
     
     private func setValues() {
@@ -45,10 +49,9 @@ class DetailViewController: UIViewController {
         thumbnail.layer.cornerRadius = 10
         nameLabel.text = recipe.name
         nameLabel.adjustsFontSizeToFitWidth = true
-        instructionLabel.text = recipe.instructions
+        textView.text = recipe.instructions
         tableView.reloadData()
     }
-    
 }
 
 extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
@@ -79,18 +82,18 @@ extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension DetailViewController {
-    func createSpinnerView() {
-        addChild(child)
-        child.view.frame = view.frame
-        view.addSubview(child.view)
-        child.didMove(toParent: self)
+    func createSpinnerView(_ vc: UIViewController) {
+        addChild(vc)
+        vc.view.frame = view.frame
+        view.addSubview(vc.view)
+        vc.didMove(toParent: self)
     }
     
-    func removeSpinnerView() {
+    func removeSpinnerView(_ vc: UIViewController) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
-            self.child.willMove(toParent: nil)
-            self.child.view.removeFromSuperview()
-            self.child.removeFromParent()
+            vc.willMove(toParent: nil)
+            vc.view.removeFromSuperview()
+            vc.removeFromParent()
             self.setValues()
         }
     }
